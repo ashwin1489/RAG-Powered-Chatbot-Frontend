@@ -45,4 +45,4 @@ async function healthCheck() {
   }
 }
 
-export { postChat, getHistory, clearSession, healthCheck };
+export { BASE, postChat, getHistory, clearSession, healthCheck };

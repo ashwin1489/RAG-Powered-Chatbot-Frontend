@@ -1,4 +1,5 @@
 
+
 // import React, { useEffect, useRef, useState } from "react";
 // import Message from "./Message";
 // import { postChat, getHistory, clearSession } from "../api/api";
@@ -9,9 +10,10 @@
 //   const [retrieved, setRetrieved] = useState([]);
 //   const [text, setText] = useState("");
 //   const [loading, setLoading] = useState(false);
-//   const [typing, setTyping] = useState(false); // 👈 track typing animation
+//   const [typing, setTyping] = useState(false); // 👈 typing dots state
 //   const bodyRef = useRef();
 
+//   // Load past history if session exists
 //   useEffect(() => {
 //     async function loadHistory() {
 //       if (!sessionId) return;
@@ -19,12 +21,13 @@
 //         const res = await getHistory(sessionId);
 //         setMessages(res.history || []);
 //       } catch (e) {
-//         console.error(e);
+//         console.error("Failed to load history:", e);
 //       }
 //     }
 //     loadHistory();
 //   }, [sessionId]);
 
+//   // Scroll to bottom when new messages
 //   useEffect(() => {
 //     if (bodyRef.current) {
 //       bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
@@ -37,14 +40,14 @@
 //       const response = await fetch("http://localhost:4000/api/chat/stream", {
 //         method: "POST",
 //         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ message, sessionId: sid })
+//         body: JSON.stringify({ message, sessionId: sid }),
 //       });
 
 //       const reader = response.body.getReader();
 //       const decoder = new TextDecoder();
-
 //       let text = "";
-//       setTyping(true); // start animation
+
+//       setTyping(true); // show typing dots
 
 //       while (true) {
 //         const { done, value } = await reader.read();
@@ -58,7 +61,7 @@
 //             const data = line.replace("data:", "").trim();
 
 //             if (data === "[DONE]") {
-//               setTyping(false); // stop animation
+//               setTyping(false);
 //               setLoading(false);
 //               return;
 //             }
@@ -67,7 +70,9 @@
 //             // Update last assistant message live
 //             setMessages((prev) => {
 //               const updated = [...prev];
-//               updated[updated.length - 1].text = text;
+//               if (updated.length > 0) {
+//                 updated[updated.length - 1].text = text;
+//               }
 //               return updated;
 //             });
 //           }
@@ -77,7 +82,7 @@
 //       console.error("Streaming error:", err);
 //       setMessages((prev) => [
 //         ...prev,
-//         { role: "assistant", text: "⚠️ Error: " + err.message }
+//         { role: "assistant", text: "⚠️ Error: " + err.message },
 //       ]);
 //       setTyping(false);
 //       setLoading(false);
@@ -92,22 +97,22 @@
 //     const userEntry = { role: "user", text: text.trim() };
 //     setMessages((prev) => [...prev, userEntry]);
 
-//     // Add assistant placeholder for streaming
+//     // Add assistant placeholder
 //     setMessages((prev) => [...prev, { role: "assistant", text: "" }]);
 
 //     try {
-//       // First call stream endpoint
+//       // Stream response
 //       await streamMessage(text.trim(), sessionId);
 
-//       // Also update sessionId + retrieved docs using normal /chat API
+//       // Also hit normal chat API (to save session + retrieve docs)
 //       const res = await postChat(text.trim(), sessionId);
 //       setSessionId(res.sessionId);
 //       if (onSessionChange) onSessionChange(res.sessionId);
-//       setRetrieved(res.retrieved || []);
 
+//       setRetrieved(res.retrieved || []);
 //       setText("");
 //     } catch (err) {
-//       console.error(err);
+//       console.error("Send error:", err);
 //     } finally {
 //       setLoading(false);
 //       setTyping(false);
@@ -121,6 +126,7 @@
 //     }
 //   };
 
+//   // Clear session + messages
 //   const handleClear = async () => {
 //     if (!sessionId) return;
 //     try {
@@ -130,12 +136,13 @@
 //       setSessionId(null);
 //       if (onSessionChange) onSessionChange(null);
 //     } catch (e) {
-//       console.error(e);
+//       console.error("Clear session error:", e);
 //     }
 //   };
 
 //   return (
 //     <div className="chat">
+//       {/* Header */}
 //       <div className="chat-header">
 //         <div style={{ fontWeight: 700 }}>RAG News — Assistant</div>
 //         <div style={{ marginLeft: 12, color: "#6b7280" }}>
@@ -143,11 +150,12 @@
 //         </div>
 //         <div style={{ marginLeft: "auto" }}>
 //           <button className="btn btn-outline" onClick={handleClear}>
-//             Clear
+//             🗑️ Clear
 //           </button>
 //         </div>
 //       </div>
 
+//       {/* Messages + Retrieved */}
 //       <div className="chat-body" ref={bodyRef}>
 //         <div className="messages">
 //           {messages.map((m, i) => (
@@ -156,7 +164,9 @@
 //           {typing && (
 //             <div className="message assistant">
 //               <span className="typing-dots">
-//                 <span>.</span><span>.</span><span>.</span>
+//                 <span>.</span>
+//                 <span>.</span>
+//                 <span>.</span>
 //               </span>
 //             </div>
 //           )}
@@ -175,7 +185,7 @@
 //                     marginTop: 6,
 //                     color: "#374151",
 //                     fontSize: 13,
-//                     whiteSpace: "pre-wrap"
+//                     whiteSpace: "pre-wrap",
 //                   }}
 //                 >
 //                   {r.text}
@@ -186,6 +196,7 @@
 //         )}
 //       </div>
 
+//       {/* Footer Input */}
 //       <div className="chat-footer">
 //         <div className="input-row">
 //           <textarea
@@ -207,7 +218,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Message from "./Message";
-import { postChat, getHistory, clearSession } from "../api/api";
+import { BASE, postChat, getHistory, clearSession } from "../api/api";
 
 export default function ChatWindow({ initialSessionId, onSessionChange }) {
   const [sessionId, setSessionId] = useState(initialSessionId || null);
@@ -215,10 +226,10 @@ export default function ChatWindow({ initialSessionId, onSessionChange }) {
   const [retrieved, setRetrieved] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [typing, setTyping] = useState(false); // 👈 typing dots state
+  const [typing, setTyping] = useState(false);
   const bodyRef = useRef();
 
-  // Load past history if session exists
+  // Load past history
   useEffect(() => {
     async function loadHistory() {
       if (!sessionId) return;
@@ -232,7 +243,6 @@ export default function ChatWindow({ initialSessionId, onSessionChange }) {
     loadHistory();
   }, [sessionId]);
 
-  // Scroll to bottom when new messages
   useEffect(() => {
     if (bodyRef.current) {
       bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
@@ -242,7 +252,7 @@ export default function ChatWindow({ initialSessionId, onSessionChange }) {
   // --- Streaming Gemini reply ---
   const streamMessage = async (message, sid) => {
     try {
-      const response = await fetch("http://localhost:4000/api/chat/stream", {
+      const response = await fetch(`${BASE}/chat/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message, sessionId: sid }),
@@ -252,7 +262,7 @@ export default function ChatWindow({ initialSessionId, onSessionChange }) {
       const decoder = new TextDecoder();
       let text = "";
 
-      setTyping(true); // show typing dots
+      setTyping(true);
 
       while (true) {
         const { done, value } = await reader.read();
@@ -272,7 +282,6 @@ export default function ChatWindow({ initialSessionId, onSessionChange }) {
             }
 
             text += data + " ";
-            // Update last assistant message live
             setMessages((prev) => {
               const updated = [...prev];
               if (updated.length > 0) {
@@ -298,18 +307,14 @@ export default function ChatWindow({ initialSessionId, onSessionChange }) {
     if (!text.trim()) return;
     setLoading(true);
 
-    // Add user message
     const userEntry = { role: "user", text: text.trim() };
     setMessages((prev) => [...prev, userEntry]);
 
-    // Add assistant placeholder
     setMessages((prev) => [...prev, { role: "assistant", text: "" }]);
 
     try {
-      // Stream response
       await streamMessage(text.trim(), sessionId);
 
-      // Also hit normal chat API (to save session + retrieve docs)
       const res = await postChat(text.trim(), sessionId);
       setSessionId(res.sessionId);
       if (onSessionChange) onSessionChange(res.sessionId);
@@ -331,7 +336,6 @@ export default function ChatWindow({ initialSessionId, onSessionChange }) {
     }
   };
 
-  // Clear session + messages
   const handleClear = async () => {
     if (!sessionId) return;
     try {
@@ -347,7 +351,6 @@ export default function ChatWindow({ initialSessionId, onSessionChange }) {
 
   return (
     <div className="chat">
-      {/* Header */}
       <div className="chat-header">
         <div style={{ fontWeight: 700 }}>RAG News — Assistant</div>
         <div style={{ marginLeft: 12, color: "#6b7280" }}>
@@ -360,7 +363,6 @@ export default function ChatWindow({ initialSessionId, onSessionChange }) {
         </div>
       </div>
 
-      {/* Messages + Retrieved */}
       <div className="chat-body" ref={bodyRef}>
         <div className="messages">
           {messages.map((m, i) => (
@@ -401,7 +403,6 @@ export default function ChatWindow({ initialSessionId, onSessionChange }) {
         )}
       </div>
 
-      {/* Footer Input */}
       <div className="chat-footer">
         <div className="input-row">
           <textarea
