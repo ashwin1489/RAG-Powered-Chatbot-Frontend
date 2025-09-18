@@ -1,11 +1,14 @@
-const BASE = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+// api.js
+const BASE =
+  import.meta.env.VITE_API_URL ||
+  "https://rag-powered-chatbot-backend-p2mv.onrender.com/api";
 
 async function postChat(message, sessionId) {
   const body = sessionId ? { sessionId, message } : { message };
   const res = await fetch(`${BASE}/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
   if (!res.ok) {
     const text = await res.text();
@@ -25,7 +28,7 @@ async function getHistory(sessionId) {
 
 async function clearSession(sessionId) {
   const res = await fetch(`${BASE}/session/${sessionId}/clear`, {
-    method: "POST"
+    method: "POST",
   });
   if (!res.ok) {
     const text = await res.text();
