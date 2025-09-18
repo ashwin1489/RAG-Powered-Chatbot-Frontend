@@ -177,29 +177,33 @@ data: {"sessionId": "123", "done": true}
 ## 🎨 Component Architecture
 
 ```
-src/
-├── 📁 components/
-│   ├── 💬 ChatInterface/
-│   │   ├── ChatContainer.jsx
-│   │   ├── MessageList.jsx
-│   │   ├── MessageInput.jsx
-│   │   └── TypingIndicator.jsx
-│   ├── 📄 SourcePanel/
-│   │   ├── SourceList.jsx
-│   │   └── SourceCard.jsx
-│   └── 🔧 Common/
-│       ├── LoadingSpinner.jsx
-│       └── ErrorBoundary.jsx
-├── 📁 services/
-│   ├── api.js          # API client functions
-│   └── streaming.js    # SSE handling
-├── 📁 styles/
-│   ├── main.scss       # Global styles
-│   ├── variables.scss  # Design tokens
-│   └── components/     # Component-specific styles
-└── 📁 utils/
-    ├── sessionStorage.js
-    └── formatters.js
+.
+├── node_modules/
+├── public/
+├── src/
+│   ├── api/
+│   │   └── api.js
+│   ├── assets/
+│   ├── components/
+│   │   ├── ChatWindow.jsx
+│   │   ├── HealthBadge.jsx
+│   │   ├── Message.jsx
+│   │   └── Sidebar.jsx
+│   ├── styles/
+│   │   └── main.scss
+│   ├── App.css
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+├── .gitignore
+├── Dockerfile
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── README.md
+└── vite.config.js
+
 ```
 
 ## 🚀 Deployment
