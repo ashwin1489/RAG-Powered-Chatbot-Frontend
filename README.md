@@ -373,7 +373,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **🌟 Part of the RAG News System**
 
-[Backend Repository](https://github.com/your-username/rag-news-backend) • [Live Demo](https://your-app.vercel.app) • [API Documentation](https://your-backend.onrender.com/docs)
+[Backend Repository](https://github.com/your-username/rag-news-backend) • [Live Demo](https://rag-powered-chatbot-frontend-lovat.vercel.app/) • [API Documentation](https://your-backend.onrender.com/docs)
 
 **💡 Built with modern React for intelligent news discovery**
 
