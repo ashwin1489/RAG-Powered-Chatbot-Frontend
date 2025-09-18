@@ -22,7 +22,6 @@
 
 🎯 **Intelligent Chat Interface** - Clean, modern conversation UI  
 ⚡ **Real-time Streaming** - Live token-by-token response display  
-📱 **Responsive Design** - Perfect on desktop, tablet, and mobile  
 🗂️ **Session Management** - Persistent conversation history  
 📄 **Source Citations** - View retrieved documents and sources  
 🌙 **Modern UX** - Smooth animations and intuitive interactions  
@@ -56,7 +55,6 @@ graph LR
 | **⚡ Build Tool** | `Vite` | Lightning-fast development & builds |
 | **🎨 Styling** | `SCSS/CSS Modules` | Modular, maintainable styles |
 | **📡 API Client** | `Fetch API + SSE` | REST calls & real-time streaming |
-| **📱 Responsive** | `CSS Grid + Flexbox` | Mobile-first responsive design |
 | **🚀 Deployment** | `Vercel` | Edge-optimized static hosting |
 
 ## 🚀 Quickstart
@@ -274,10 +272,6 @@ VITE_API_URL=https://your-backend.onrender.com      # ❌ Missing /api
 - Check browser network tab for connection errors
 - Ensure CORS is configured on your backend
 
-#### 📱 Mobile Display Issues
-- Test responsive breakpoints in browser dev tools
-- Verify touch events work on mobile devices
-- Check viewport meta tag in index.html
 
 #### 🌐 Deployment Issues
 - Confirm `VITE_API_URL` points to your deployed backend
