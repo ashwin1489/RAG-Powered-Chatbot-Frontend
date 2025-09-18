@@ -375,8 +375,11 @@ npx depcheck
 
 **🌟 Part of the RAG News System**
 
-[Backend Repository](https://github.com/your-username/rag-news-backend) • [Live Demo](https://rag-powered-chatbot-frontend-lovat.vercel.app/) • [API Documentation](https://your-backend.onrender.com/docs)
+[Backend Repository](https://github.com/your-username/rag-news-backend) • [Live Demo](https://rag-powered-chatbot-frontend-lovat.vercel.app/) • • [Documentation](https://github.com/ashwin1489/RAG-Powered-Chatbot-Backend/blob/main/COMPLETE_DOCUMENTATION.md)
 
-**💡 Built with modern React for intelligent news discovery**
+
+[Watch Demo Video](https://www.youtube.com/watch?v=vav0KYrd59I)
+
+
 
 </div>
